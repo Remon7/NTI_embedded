@@ -21,6 +21,12 @@
 #define		SFIOR					(*((volatile uint8 * ) (0x50)))
 
 
+#define		TIFR					(*((volatile uint8 * ) (0x58)))
+
+
+#define		TIMSK					(*((volatile uint8 * ) (0x59)))
+
+
 typedef union
 {
 	uint8 Reg;
@@ -77,13 +83,24 @@ typedef struct
 {
 	Reg_Def TCNT0_t;
 	Reg_Def TCCR0_t;
-	Reg_Def RESERVED_Reg[4];
-	Reg_Def TIFR_t;
-	Reg_Def TIMSK_t;
-	Reg_Def RESERVED2_Reg[2];
+	Reg_Def RESERVED_Reg[8];
 	Reg_Def OCR0_t;
 
 }TIM0_REG_t;
+
+
+/*******************************************************************************
+ *                      Timer1 datatypes                                           *
+ *******************************************************************************/
+typedef struct
+{
+	uint16	ICR1_t;
+	uint16	OCR1B_t;
+	uint16	OCR1A_t;
+	uint16	TCNT1_t;
+	Reg_Def TCCR1B_t;
+	Reg_Def TCCR1A_t;
+}TIM1_REG_t;
 
 
 /*******************************************************************************
@@ -112,6 +129,12 @@ typedef struct
  *                      TIM0 defines                                           *
  *******************************************************************************/
 #define TIM0_BASE 			(( TIM0_REG_t*) 0x52)
+
+
+/*******************************************************************************
+ *                      TIM1 defines                                           *
+ *******************************************************************************/
+#define TIM1_BASE 			(( TIM1_REG_t*) 0x46)
 
 
 

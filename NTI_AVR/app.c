@@ -12,10 +12,12 @@
 #include "util/delay.h"
 #include "MCAL/inc/ADC.h"
 #include "MCAL/inc/timer0.h"
+#include "MCAL/inc/timer1.h"
 
 
 extern  ADC_ConfigType ADC_config;
 extern	TIM0_ConfigType TIM0_config;
+extern	TIM1_ConfigType TIM1_config;
 /*
 
 
@@ -97,30 +99,59 @@ void ADC_main()
 		H_LCD_void_sendCommand(LCD_CLEAR_COMMAND);
 	}
 }
-*/
+ */
 
-static gTick=0;
+/*static gTick=0;
 
 void Tim0_Task()
 {
-	gTick++;
-	if(gTick == 124)
-	{
-		DIO_voidSetPinValue(PORTA_BASE,6,LOGIC_LOW);
-		_delay_ms(1000);
-		gTick =0;
-	}
 
+}
+void TIM0_main()
+{
+	DIO_voidSetPinDirection(PORTB_BASE,3,OUTPUT);
+	Timer0_Init(&TIM0_config);
+	uint8 key;
+	uint8 duty=90;
+	Timer0_setFastPWM(duty,&TIM0_config);
+	while(1)
+	{
+		key= Keypad_getPressedKey();
+		if(key == '+')
+		{
+			duty = duty +10;
+			Timer0_setFastPWM(duty,&TIM0_config);
+			_delay_ms(50);
+		}
+		if(key == '-')
+		{
+			duty = duty -10;
+			Timer0_setFastPWM(duty,&TIM0_config);
+			_delay_ms(50);
+		}
+	}
+}*/
+
+
+static uint8 gTick=0;
+
+void Tim1_Task()
+{
+	gTick++;
+	if(gTick == 1)
+	{
+		DIO_voidSetPinValue(PORTA_BASE,5,LOGIC_LOW);
+		_delay_ms(5000);
+	}
 }
 void main()
 {
-	Timer0_Init(&TIM0_config);
-	Timer0_EnableInt(&TIM0_config,Tim0_Task);
-	DIO_voidSetPinDirection(PORTA_BASE,6,OUTPUT);
-
+	Timer1_Init(&TIM1_config);
+	Timer1_EnableInt(&TIM1_config,Tim1_Task);
+	DIO_voidSetPinDirection(PORTA_BASE,5,OUTPUT);
 	while(1)
 	{
-		DIO_voidSetPinValue(PORTA_BASE,6,OUTPUT);
+		DIO_voidSetPinValue(PORTA_BASE,5,LOGIC_HIGH);
 
 	}
 }

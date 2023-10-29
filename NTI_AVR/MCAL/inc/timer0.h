@@ -29,10 +29,6 @@ typedef enum
 	DISCONNECTED,NON_PWM_TOGGLE,CLEAR_COM,SET_COM
 }Timer0_COM;
 
-typedef enum
-{
-	RELOAD_VALUE,CMP_VALUE
-}Timer0_Value;
 
 typedef enum
 {
@@ -43,7 +39,8 @@ typedef struct
 {
 	Timer0_Mode mode;
 	Timer0_COM COM;
-	Timer0_Value value;
+	uint8 compare;
+	uint8 reload;
 	Timer0_Prescal prescalar;
 }TIM0_ConfigType;
 
@@ -69,6 +66,10 @@ void Timer0_DisableInt();
 void Timer0_GetCounts();
 
 void Timer0_SetDelayTimeMilliSecond();
+
+Error_Status Timer0_setFastPWM(uint8 duty,TIM0_ConfigType *TIM0_config);
+
+void setphaseCorrectPWM(uint8 duty);
 
 
 

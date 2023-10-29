@@ -38,6 +38,7 @@ Error_Status Timer0_Init(TIM0_ConfigType *TIM0_config)
 		SET_BIT(TIM0_BASE->TCCR0_t.Reg,FOC0);
 		CLEAR_BIT(TIM0_BASE->TCCR0_t.Reg,WGM01);
 		CLEAR_BIT(TIM0_BASE->TCCR0_t.Reg,WGM00);
+		TIM0_BASE->TCNT0_t.Reg = TIM0_config->reload;
 		break;
 	case PHASE_CORRECT_PWM:
 		CLEAR_BIT(TIM0_BASE->TCCR0_t.Reg,FOC0);
@@ -48,6 +49,7 @@ Error_Status Timer0_Init(TIM0_ConfigType *TIM0_config)
 		SET_BIT(TIM0_BASE->TCCR0_t.Reg,FOC0);
 		SET_BIT(TIM0_BASE->TCCR0_t.Reg,WGM01);
 		CLEAR_BIT(TIM0_BASE->TCCR0_t.Reg,WGM00);
+		TIM0_BASE->OCR0_t.Reg = TIM0_config->compare;
 		break;
 	case FAST_PWM:
 		CLEAR_BIT(TIM0_BASE->TCCR0_t.Reg,FOC0);
@@ -64,8 +66,6 @@ Error_Status Timer0_Init(TIM0_ConfigType *TIM0_config)
 		TIM0_BASE->TCCR0_t.Reg = ((TIM0_BASE->TCCR0_t.Reg & 0xCF) | TIM0_config->COM << COM00);
 	}
 	TIM0_BASE->TCCR0_t.Reg = ((TIM0_BASE->TCCR0_t.Reg & 0xF8) | TIM0_config->prescalar);
-
-	TIM0_BASE->TCNT0_t.Reg = TIM0_config->value;
 
 	return NO_ERROR;
 }
@@ -95,10 +95,10 @@ void Timer0_EnableInt(TIM0_ConfigType *TIM0_config,void(*Ptr2Func)(void))
 	switch(TIM0_config->mode)
 	{
 	case NORMAL:
-		SET_BIT(TIM0_BASE->TIMSK_t.Reg,TOIE0);
+		SET_BIT(TIMSK,TOIE0);
 		break;
 	case CTC:
-		SET_BIT(TIM0_BASE->TIMSK_t.Reg,OCIE0);
+		SET_BIT(TIMSK,OCIE0);
 		break;
 	}
 	TIM0_SetCallBack(*Ptr2Func);
@@ -107,16 +107,40 @@ void Timer0_EnableInt(TIM0_ConfigType *TIM0_config,void(*Ptr2Func)(void))
 
 void Timer0_DisableInt()
 {
-	CLEAR_BIT(TIM0_BASE->TIMSK_t.Reg,TOIE0);
-	CLEAR_BIT(TIM0_BASE->TIMSK_t.Reg,OCIE0);
+	CLEAR_BIT(TIMSK,TOIE0);
+	CLEAR_BIT(TIMSK,OCIE0);
 }
 
-Error_Status setFastPWM(uint8 duty)
+Error_Status Timer0_setFastPWM(uint8 duty,TIM0_ConfigType *TIM0_config)
 {
-	TIM0_BASE->OCR0_t.Reg = (255*duty)/100;
-	if(duty<0 || duty >100)
+	if(duty>=0 || duty<=100)
+	{
+		TIM0_BASE->OCR0_t.Reg  = abs (((duty*256)/100)-1);
+
+		if(TIM0_config->COM == CLEAR_COM)
+		{
+			TIM0_BASE->OCR0_t.Reg  = abs (((duty*255)/100)-1);
+		}
+		else if(TIM0_config->COM == SET_COM)
+		{
+			TIM0_BASE->OCR0_t.Reg  = abs(255-((duty*256)/100));
+
+		}
+	}
+	else
 	{
 		return OUT_OF_RANGE;
 	}
+
 	return NO_ERROR;
 }
+
+
+void setphaseCorrectPWM(uint8 duty)
+{
+
+
+	TIM0_BASE->OCR0_t.Reg  = (duty*255)/100;
+
+}
+
