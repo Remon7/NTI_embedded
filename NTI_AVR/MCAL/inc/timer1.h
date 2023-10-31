@@ -14,6 +14,8 @@
 #include "MC_HW.h"
 #include "../../inc/BIT_MATH.h"
 
+#define RISING	(1u)
+#define FALLING	(0u)
 
 /*******************************************************************************
  *                              Module Data Types                              *
@@ -38,6 +40,11 @@ typedef enum
 	TIM1_NO_CLOCK,TIM1_PRESCALAR,TIM1_PRESCALAR_8,TIM1_PRESCALAR_64,TIM1_PRESCALAR_256,TIM1_PRESCALAR_1024,TIM1_EXTERNAL_FALLING,TIM1_EXTERNAL_RISING
 }Timer1_Prescal;
 
+typedef enum
+{
+	Channel_A,Channel_B
+}Timer1_Channel;
+
 typedef struct
 {
 	Timer1_Mode mode;
@@ -45,6 +52,7 @@ typedef struct
 	uint16 compare;
 	uint16 reload;
 	Timer1_Prescal prescalar;
+	Timer1_Channel channel;
 }TIM1_ConfigType;
 
 
@@ -58,20 +66,17 @@ void Timer1_start(TIM1_ConfigType *TIM1_config);
 
 void TIM1_SetCallBack(void(*Ptr2Func)(void));
 
-void Timer1_start(TIM1_ConfigType *TIM1_config);
-
-void Timer1_stop();
-
 void Timer1_EnableInt(TIM1_ConfigType *TIM1_config,void(*Ptr2Func)(void));
 
-void Timer1_DisableInt();
+void Timer1_ICU_EnableInt(void(*Ptr2Func)(void));
 
-void Timer1_GetCounts();
+void Timer1_ICU_DisableInt();
 
-void Timer1_SetDelayTimeMilliSecond();
+void Timer1_ICU_SetTrig(uint8 Copy_u8Trig);
 
-Error_Status Timer1_setFastPWM(uint8 duty,TIM1_ConfigType *TIM1_config);
+uint16 Timer1_ICU_takeReading(void);
 
+void Timer1_Icu_clearTimerValue();
 
 
 #endif /* MCAL_INC_TIMER1_H_ */

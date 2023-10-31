@@ -102,3 +102,30 @@ void H_LCD_void_sendIntNum(sint32 copy_s32Num)
 	itoa(copy_s32Num,buff,10);
 	H_LCD_void_sendString(buff);
 }
+
+void H_LCD_void_Clear()
+{
+	H_LCD_void_sendCommand(LCD_CLEAR_COMMAND);
+}
+
+
+void H_LCD_CreateCustomChar(const uint8 *ArrPattern, uint8 charCode) {
+	uint8 i;
+	charCode &= 0x07;  // Make sure the charCode is in the range 0-7
+	H_LCD_void_sendCommand(0x40 + (charCode * 8));  // Set CGRAM address for the custom character
+
+	for (i = 0; i < 8; i++) {
+		H_LCD_void_sendCommand(ArrPattern[i]);  // Send the custom character pattern to CGRAM
+	}
+}
+
+void H_LCD_DisplayCustomChar(uint8 charCode) {
+	charCode &= 0x07;  // Make sure the charCode is in the range 0-7
+	H_LCD_void_sendData(charCode);  // Display the custom character on the LCD
+}
+
+void H_LCD_void_gotoXY(uint8 copy_u8Row, uint8 copy_u8Col)
+{
+	uint8_t Local_U8_Arr [4] = {LCD_R0_COMMAND , LCD_R1_COMMAND , LCD_R2_COMMAND , LCD_R3_COMMAND};
+	H_LCD_void_sendCommand(Local_U8_Arr[copy_u8Row] + copy_u8Col);
+}

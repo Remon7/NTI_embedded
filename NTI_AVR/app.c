@@ -13,11 +13,15 @@
 #include "MCAL/inc/ADC.h"
 #include "MCAL/inc/timer0.h"
 #include "MCAL/inc/timer1.h"
-
+#include "MCAL/inc/USART.h"
+#include "MCAL/inc/SPI.h"
+#include "MCAL/inc/TWI.h"
 
 extern  ADC_ConfigType ADC_config;
 extern	TIM0_ConfigType TIM0_config;
 extern	TIM1_ConfigType TIM1_config;
+extern	SPI_ConfigType SPI_config;
+extern	TWI_ConfigType TWI_config;
 /*
 
 
@@ -132,7 +136,7 @@ void TIM0_main()
 	}
 }*/
 
-
+/*
 static uint8 gTick=0;
 
 void Tim1_Task()
@@ -144,7 +148,7 @@ void Tim1_Task()
 		_delay_ms(5000);
 	}
 }
-void main()
+void TIM1_main()
 {
 	Timer1_Init(&TIM1_config);
 	Timer1_EnableInt(&TIM1_config,Tim1_Task);
@@ -154,4 +158,111 @@ void main()
 		DIO_voidSetPinValue(PORTA_BASE,5,LOGIC_HIGH);
 
 	}
+}*/
+
+/*
+static volatile uint8 counter=0;
+
+static uint8 edge_count = 0;
+static uint8 gHigh =0;
+static uint8 Total =0;
+
+void ICU_CALLBACK(void)
+{
+	DIO_voidSetPinDirection(PORTA_BASE, PIN4, OUTPUT);
+	DIO_voidSetPinDirection(PORTA_BASE, PIN5, OUTPUT);
+	DIO_voidSetPinDirection(PORTA_BASE, PIN6, OUTPUT);
+
+
+	edge_count++ ;
+	if(edge_count == 1)
+	{
+
+	}
+
+
+	else if (edge_count ==2)
+	{
+
+
+	}
+
+	else if (edge_count ==3)
+	{
+
+
+	}
+}
+
+void OVF_CALLBACK()
+{
+	counter ++;
+	DIO_voidSetPinDirection(PORTA_BASE, PIN5, OUTPUT);
+
+}
+
+
+void ICU_main()
+{
+	DIO_voidSetPinDirection(PORTB_BASE, PIN3, OUTPUT);
+	DIO_voidSetPinDirection(PORTD_BASE, PIN6, INPUT);
+
+	Timer1_Init(&TIM1_config);
+	Timer1_EnableInt(&TIM1_config,OVF_CALLBACK);
+
+	Timer1_ICU_SetTrig(RISING);
+	Timer1_ICU_EnableInt(ICU_CALLBACK);
+
+	Timer0_Init(&TIM0_config);
+	uint8 duty=50;
+	Timer0_setFastPWM(duty,&TIM0_config);
+
+	H_LCD_void_Init();
+	float time=0;
+	time = abs(((65535-reading1)*100)/65535 );
+	H_LCD_void_sendIntNum(time);
+
+	while(1)
+	{
+
+
+	}
+}
+ */
+
+/*void UART_main()
+{
+	UART_init();
+	UART_sendString("REMON#");
+	while(1)
+	{
+
+	}
+}*/
+
+
+/*void SPI_main()
+{
+	DIO_voidSetPinDirection(PORTB_BASE,PIN4,INPUT);
+	DIO_voidSetPinDirection(PORTB_BASE,PIN5,INPUT);
+	DIO_voidSetPinDirection(PORTB_BASE,PIN6,OUTPUT);
+	DIO_voidSetPinDirection(PORTB_BASE,PIN7,INPUT);
+	SevenSeg_Init();
+
+
+	uint8 data;
+
+	SPI_Init(&SPI_config);
+
+	while(1)
+	{
+		data = SPI_sendReceiveByte(2);
+		SevenSeg_Num(data);
+	}
+}*/
+
+
+void main()
+{
+
 }

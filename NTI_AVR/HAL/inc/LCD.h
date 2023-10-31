@@ -28,7 +28,13 @@ void H_LCD_void_sendString(const sint8 * pstr);
 
 void H_LCD_void_sendIntNum(sint32 copy_s32Num);
 
+void H_LCD_void_Clear();
 
+void H_LCD_CreateCustomChar(const uint8 *ArrPattern, uint8 charCode);
+
+void H_LCD_DisplayCustomChar(uint8 charCode);
+
+void H_LCD_void_gotoXY(uint8 copy_u8Row, uint8 copy_u8Col);
 
 
 #endif /* LCD_H_ */

@@ -40,6 +40,12 @@
 #define LCD_SET_CURSOR_LOCATION        0x80
 
 
+#define LCD_R0_COMMAND                0x80
+#define LCD_R1_COMMAND                0xC0
+#define LCD_R2_COMMAND                0x94
+#define LCD_R3_COMMAND                0xD4
+#define NULL                          '\0'
+
 #define GET_BIT(register_name,bit_no)  			((register_name & (1<<bit_no)) >>bit_no)
 
 #endif /* LCD_CONFIG_H_ */
