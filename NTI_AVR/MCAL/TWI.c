@@ -13,13 +13,22 @@
 void TWI_Init(TWI_ConfigType *TWI_config)
 {
 	// frequency = cpu_clk / (16 + 2*(TWBR)*(2^TWSR))
-	TWI_BASE->TWBR_t.Reg = 0x02;
+
+	switch (TWI_config->freq)
+	{
+	case TWI_100KHZ_FREQ:
+		TWI_BASE->TWBR_t.Reg = TWI_100KHZ_TWBR_VALUE;
+		break;
+	case TWI_400KHZ_FREQ:
+		TWI_BASE->TWBR_t.Reg = TWI_400KHZ_TWBR_VALUE;
+		break;
+	}
 
 	//setting the prescalar bits
 
 	TWI_BASE->TWSR_t.Reg = TWI_config->prescale<<TWPS0;
 
-	TWI_BASE->TWAR_t.Reg = 0b00000010; // my address = 0x01
+	TWI_BASE->TWAR_t.Reg = TWI_MY_ADDRESS_VALUE; // my address = 0x01
 
 	//TWEN to enable the TWI
 	TWI_BASE->TWCR_t.Reg = (1<<TWEN);
@@ -66,12 +75,10 @@ void TWI_sendStop(void)
 	 */
 	TWI_BASE->TWCR_t.Reg = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN);
 
-	// wait foe the TWINT flag to know that stop bit is sent successfully
-	while(BIT_IS_CLEAR(TWI_BASE->TWCR_t.Reg,TWINT));
 }
 
 
-uint8 TWI_recieveByteWithACK()
+void TWI_recieveByteWithACK(uint8 *ptr)
 {
 
 
@@ -84,11 +91,11 @@ uint8 TWI_recieveByteWithACK()
 	while(BIT_IS_CLEAR(TWI_BASE->TWCR_t.Reg,TWINT));
 
 	/* Read Data */
-	return TWI_BASE->TWDR_t.Reg;
+	*ptr = TWI_BASE->TWDR_t.Reg;
 }
 
 
-uint8 TWI_recieveByteWithNACK()
+void TWI_recieveByteWithNACK(uint8 *ptr)
 {
 
 
@@ -101,7 +108,7 @@ uint8 TWI_recieveByteWithNACK()
 	while(BIT_IS_CLEAR(TWI_BASE->TWCR_t.Reg,TWINT));
 
 	/* Read Data */
-	return TWI_BASE->TWDR_t.Reg;
+	*ptr = TWI_BASE->TWDR_t.Reg;
 }
 
 
@@ -113,32 +120,4 @@ uint8 TWI_getStatus(void)
 	return status;
 }
 
-
-
-static void (*P_TWI_CallBack)(void) = NULL_PTR;
-
-
-uint8 TWI_receiveByteAsynchCallBack()
-{
-	TWI_BASE->TWCR_t.Reg = (1 << TWINT) | (1 << TWEN);
-	return TWI_BASE->TWDR_t.Reg;
-}
-
-
-void TWI_SetCallBack(void(*TWI_receiveByteAsynchCallBack)(void))
-{
-
-	P_TWI_CallBack = TWI_receiveByteAsynchCallBack;
-	SREG |= (1<<7);
-}
-
-ISR(TWI_vect)
-{
-	if(P_TWI_CallBack != NULL_PTR)
-	{
-		SREG &= ~(1<<7);
-		P_TWI_CallBack();
-	}
-
-}
 

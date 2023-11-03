@@ -5,7 +5,9 @@ app.o app.o: ../app.c ../MCAL/inc/Dio.h ../MCAL/inc/MC_HW.h \
   ../HAL/inc/LCD_config.h ../MCAL/inc/ADC.h \
   ../MCAL/inc/../../inc/std_types.h ../MCAL/inc/../../inc/BIT_MATH.h \
   ../MCAL/inc/timer0.h ../MCAL/inc/../../inc/config.h \
-  ../MCAL/inc/timer1.h ../MCAL/inc/USART.h ../MCAL/inc/SPI.h
+  ../MCAL/inc/timer1.h ../MCAL/inc/USART.h ../MCAL/inc/SPI.h \
+  ../MCAL/inc/TWI.h ../HAL/inc/EEPROM.h ../HAL/inc/..\..\MCAL\inc\TWI.h \
+  ../HAL/inc/../../inc/std_types.h
 
 ../MCAL/inc/Dio.h:
 
@@ -42,3 +44,11 @@ app.o app.o: ../app.c ../MCAL/inc/Dio.h ../MCAL/inc/MC_HW.h \
 ../MCAL/inc/USART.h:
 
 ../MCAL/inc/SPI.h:
+
+../MCAL/inc/TWI.h:
+
+../HAL/inc/EEPROM.h:
+
+../HAL/inc/..\..\MCAL\inc\TWI.h:
+
+../HAL/inc/../../inc/std_types.h:

@@ -16,12 +16,12 @@
 #include "MCAL/inc/USART.h"
 #include "MCAL/inc/SPI.h"
 #include "MCAL/inc/TWI.h"
+#include "HAL/inc/EEPROM.h"
 
 extern  ADC_ConfigType ADC_config;
 extern	TIM0_ConfigType TIM0_config;
 extern	TIM1_ConfigType TIM1_config;
 extern	SPI_ConfigType SPI_config;
-extern	TWI_ConfigType TWI_config;
 /*
 
 
@@ -264,5 +264,19 @@ void ICU_main()
 
 void main()
 {
+	uint8 value =0;
 
+	SevenSeg_Init();
+	H_LCD_void_Init();
+
+	EEPROM_Init();
+	EEPROM_WriteByte(0, 2);
+	_delay_ms(10);
+	EEPROM_ReadByte(0, &value);
+	SevenSeg_Num(value);
+
+	H_LCD_void_sendIntNum(value);
+	while(1)
+	{
+	}
 }

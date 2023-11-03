@@ -10,5 +10,6 @@
 
 const TWI_ConfigType TWI_config = {
 		TWI_PRESCALAR_1,
+		TWI_400KHZ_FREQ
 };
 

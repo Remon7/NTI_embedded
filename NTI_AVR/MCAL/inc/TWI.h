@@ -42,11 +42,16 @@ typedef enum
 	TWI_PRESCALAR_1,TWI_PRESCALAR_4,TWI_PRESCALAR_16,TWI_PRESCALAR_64
 }TWI_Prescal;
 
+typedef enum
+{
+	TWI_100KHZ_FREQ,TWI_400KHZ_FREQ
+}TWI_Freq;
 
 
 typedef struct
 {
 	TWI_Prescal prescale;
+	TWI_Freq freq;
 
 }TWI_ConfigType;
 
@@ -55,7 +60,7 @@ typedef struct
  *                      Function Prototypes                                    *
  *******************************************************************************/
 
-Error_Status TWI_Init(TWI_ConfigType *TWI_config);
+void TWI_Init(TWI_ConfigType *TWI_config);
 
 void TWI_sendByte(uint8 copy_u8data);
 
@@ -63,13 +68,10 @@ void TWI_sendStart(void);
 
 void TWI_sendStop(void);
 
-uint8 TWI_recieveByteWithACK();
+void TWI_recieveByteWithACK(uint8 *ptr);
 
-uint8 TWI_recieveByteWithNACK();
+void TWI_recieveByteWithNACK(uint8 *ptr);
 
 uint8 TWI_getStatus(void);
 
-uint8 TWI_receiveByteAsynchCallBack();
-
-void TWI_SetCallBack(void(*TWI_receiveByteAsynchCallBack)(void));
 #endif /* MCAL_INC_TWI_H_ */

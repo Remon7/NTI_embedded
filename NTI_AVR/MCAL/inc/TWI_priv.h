@@ -10,6 +10,10 @@
 
 
 #define TWI_STATUS_MASK				0xF8
+#define TWI_100KHZ_TWBR_VALUE		0x48
+#define TWI_400KHZ_TWBR_VALUE		0x0C
+#define TWI_MY_ADDRESS_VALUE		0b00000010
+
 
 /*******************************************************************************
  *                  DEFINING TWCR Bits                                        *

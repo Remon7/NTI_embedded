@@ -4,16 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../HAL/EEPROM.c \
 ../HAL/LCD.c \
 ../HAL/keypad.c \
 ../HAL/segment7_driver.c 
 
 OBJS += \
+./HAL/EEPROM.o \
 ./HAL/LCD.o \
 ./HAL/keypad.o \
 ./HAL/segment7_driver.o 
 
 C_DEPS += \
+./HAL/EEPROM.d \
 ./HAL/LCD.d \
 ./HAL/keypad.d \
 ./HAL/segment7_driver.d 
